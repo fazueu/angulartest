@@ -5,6 +5,141 @@
 
 <h2>Index</h2>
 
+<div ng-controller="step1Ctrl as main">
+    Choose:
+    <a href="#/step2">step2</a> |
+    <a href="#/step3">step3</a> |
+    <br />
+
+    <div class="view-animate-container">
+        <div ng-view class="view-animate"></div>
+    </div>
+    <hr />
+
+    <pre>$location.path() = {{main.$location.path()}}</pre>
+    <pre>$route.current.templateUrl = {{main.$route.current.templateUrl}}</pre>
+    <pre>$route.current.params = {{main.$route.current.params}}</pre>
+    <pre>$routeParams = {{main.$routeParams}}</pre>
+</div>
+
 
 <script src="/Scripts/angular.js"></script>
 <script src="/Scripts/angular-route.js"></script>
+<script src="/Scripts/angular-resource.js"></script>
+<script>
+
+    var app = angular.module('wizardApp', ['ngRoute', 'appControllers', 'appServices']);
+
+    app.config(function ($routeProvider) {
+
+        $routeProvider.when("/home", {
+            controller: "step1Ctrl",
+            templateUrl: "/Test/step1"
+        });
+
+        $routeProvider.when("/step2", {
+            controller: "step2Ctrl",
+            templateUrl: "/Test/step2"
+        });
+
+        $routeProvider.when("/step3", {
+            controller: "step3Ctrl",
+            templateUrl: "/Test/step3"
+        });
+
+        $routeProvider.otherwise({ redirectTo: "/step1" });
+
+    });
+
+
+    //////////////controllers
+
+    var appControllers = angular.module('appControllers', []);
+
+    appControllers.controller('step1Ctrl', ['$scope', '$routeParams', '$location', 'customerService',
+      function ($scope, $routeParams, $location, customerService) {
+
+          $scope.onCustomerClick = function (customer) {
+              console.log(customer);
+
+              $location.path('/step2');
+          }
+
+          $scope.onAddCustomerClick = function () {
+              var test = customerService.addCustomer(function (data) { }, {});
+              $location.path('/addcustomer');
+          }
+
+          customerService.getAll(function (data) {
+              $scope.customers = data;
+          });
+          /*
+       $scope.customers = [
+           {
+               'id': '1',
+               'name': 'My name'
+           },
+            {
+                'id': '2',
+                'name': 'My name'
+            },
+             {
+                 'id': '3',
+                 'name': 'My name'
+             },
+              {
+                  'id': '4',
+                  'name': 'My name'
+              },
+       ];
+       */
+      }]);
+
+    appControllers.controller('step2Ctrl', ['$scope', '$routeParams',
+      function ($scope, $routeParams) {
+
+      }]);
+
+    appControllers.controller('step3Ctrl', ['$scope', '$routeParams',
+      function ($scope, $routeParams) {
+
+      }]);
+
+    appControllers.controller('flowCtrl', ['$scope', '$routeParams',
+      function ($scope, $routeParams) {
+
+      }]);
+
+    appControllers.controller('stepsCtrl', ['$scope', '$routeParams',
+      function ($scope, $routeParams) {
+
+      }]);
+
+
+    ////////////services
+
+
+    var appServices = angular.module('appServices', ['ngResource']);
+
+    appServices.factory('customerService', function ($http, $resource) {
+
+        return {
+            getAll: function (callback) {
+                $http.get('api/customers').success(function (data) {
+                    callback(data);
+                    console.log(data);
+                });
+            },  //todo handle on error
+            addCustomer: function (callback, customer) {
+                $http.post('api/customers', customer).success(function (data) {
+                    callback(data);
+                    console.log(data);
+                    console.log(customer);
+                });
+            },
+        }
+    }
+    );
+
+
+</script>

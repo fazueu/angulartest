@@ -24,7 +24,12 @@ namespace AngularTest.Controllers
 
         //
         // GET: /Test/Create
-        public ActionResult Create()
+        public ActionResult step1()
+        {
+            return View();
+        }
+
+        public ActionResult step2()
         {
             return View();
         }

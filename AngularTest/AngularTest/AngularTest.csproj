@@ -522,6 +522,8 @@
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Scripts\version.json" />
     <Content Include="Views\Test\Index.cshtml" />
+    <Content Include="Views\Test\step1.cshtml" />
+    <Content Include="Views\Test\step2.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
